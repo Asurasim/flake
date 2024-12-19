@@ -9,8 +9,7 @@
     };
   };
 
-
-  outputs = { self, nixpkgs, home-manager }:
+  outputs = { self, nixpkgs, ... }@inputs:
 
     let
       system = "x86_64-linux";
@@ -21,18 +20,15 @@
       lib = nixpkgs.lib;
 
     in {
+
       nixosConfigurations = {
-	pram = lib.nixosSystem {
+
+	vm = lib.nixosSystem {
+
+	  specialArgs = {inherit inputs;};
 	  inherit system;
 	  modules = [
-	    ./system/configuration.nix
-	    home-manager.nixosModules.home-manager {
-	      home-manager.useGlobalPkgs = true;
-	      home-manager.useUserPackages = true;
-	      home-manager.users.pram = {
-		imports = [ ./homemanager/home.nix ];
-	      };
-	    }
+	    ./hosts/vm/vm.nix
 	  ];
 	};
       };

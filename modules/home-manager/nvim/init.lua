@@ -4,28 +4,17 @@ vim.opt.clipboard = "unnamedplus"
 -- Display Numbers
 vim.wo.number = true
 
-
--- VIM PLUG
--- local Plug = vim.fn['plug#']
--- vim.call('plug#begin', '~/.config/nvim/plugged')
--- 	Plug 'vimwiki/vimwiki'
---	Plug 'nvim-tree/nvim-tree.lua'
---	Plug 'akinsho/toggleterm.nvim'
--- vim.call('plug#end')
-
+require("plugstuff")
 
 -- NVIM TREE
--- disable netrw at the very start of your init.lua
+	-- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- set termguicolors to enable highlight groups
+	-- set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
 
--- empty setup using defaults
-require("nvim-tree").setup()
-
--- OR setup with some options
+	-- default settings
 require("nvim-tree").setup({
 	sort = {
 		sorter = "case_sensitive",
@@ -40,6 +29,11 @@ require("nvim-tree").setup({
 		dotfiles = true,
 	},
 })
+
+	-- Open on startup
+if vim.fn.argc(-1) == 0 then
+	vim.cmd("NvimTreeOpen")
+end
 
 -- VIM WIKI
 vim.cmd("let g:vimwiki_list = [{'path': '~/Notes/'}]")

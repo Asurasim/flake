@@ -5,21 +5,20 @@
 
 {
   imports =
-    [ (modulesPath + "/profiles/qemu-guest.nix")
-    ];
-
+    [ (modulesPath + "/profiles/qemu-guest.nix") ];
+   
   boot.initrd.availableKernelModules = [ "ata_piix" "floppy" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/381d27e0-3c1c-4e85-a3bc-c3dc9bb2c125";
+    { device = "/dev/disk/by-label/NIXROOT";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/5316-D0FC";
+    { device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
       options = [ "fmask=0022" "dmask=0022" ];
     };
