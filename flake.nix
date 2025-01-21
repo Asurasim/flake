@@ -1,36 +1,57 @@
 {
-  description = "System Setup";
+  description = "Le Roulette";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    home-manager = {
-      url = github:nix-community/home-manager;
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # NixPkgs
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    
+    # NixPkgs Unstable
+    unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Home Manager
+    home-manager.url = github:nix-community/home-manager;
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Hardware Configuration
+    nixos-hardware.url = "github:nixos/nixos-hardware";
+
+    # Snowfall Lib
+    snowfall-lib.url = "github:snowfallorg/lib";
+    snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
+    
+    # Snowfall Flake
+    flake.url = "github:snowfallorg/flake";
+    flake.inputs.nixpkgs.follows = "unstable";
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
-
+  outputs =
+    inputs:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-	inherit system;
-	config.allowUnfree = true;
-      };
-      lib = nixpkgs.lib;
+      lib = inputs.snowfall-lib.mkLib {
+	inherit inputs;
+	src = ./.;
 
-    in {
+	snowfall = {
+	  meta = {
+	    name = "roulette";
+	    title = "Le Roulette";
+	  };
 
-      nixosConfigurations = {
-
-	vm = lib.nixosSystem {
-
-	  specialArgs = {inherit inputs;};
-	  inherit system;
-	  modules = [
-	    ./hosts/vm/vm.nix
-	  ];
+	  namespace = "roulette";
 	};
       };
+    in
+    lib.mkFlake {
+      channels-config = {
+        allowUnfree = true;
+      };
+
+      overlays = with inputs; [
+	flake.overlays.default
+      ];
+
+      systems.modules.nixos = with inputs; [
+        home-manager.nixosModules.home-manager
+      ];
     };
 }
