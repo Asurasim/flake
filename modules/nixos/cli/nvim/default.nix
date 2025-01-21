@@ -17,9 +17,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      roulette.neovim
-    ];
+    programs.neovim = {
+      enable = true;
+    };
 
     environment.variables = {
       EDITOR = "nvim";

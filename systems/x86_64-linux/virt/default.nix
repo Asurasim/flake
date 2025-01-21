@@ -4,7 +4,6 @@
   namespace,
   ...
 }:
-with lib;
 with lib.${namespace};
 {
   boot.loader.systemd-boot.enable = true;

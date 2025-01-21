@@ -7,7 +7,7 @@
   namespace,
   ...
 }:
-
+with lib.${namespace};
 {
   roulette = {
     user = {
